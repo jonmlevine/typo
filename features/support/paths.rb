@@ -20,7 +20,7 @@ module NavigationHelpers
     when /^the admin page$/
       '/admin'
     when /^the admin categories page$/
-      'admin/categories/new'
+      '/admin/categories/new'
 
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:
