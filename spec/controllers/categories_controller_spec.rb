@@ -28,13 +28,16 @@ describe CategoriesController, "/index" do
 
   describe "if :index template exists" do
     it "should render :index" do
-      pending "Stubbing #template_exists is not enough to fool Rails"
       controller.stub!(:template_exists?) \
         .and_return(true)
 
       do_get
       response.should render_template(:index)
     end
+  end
+
+  def do_get
+    get 'index'
   end
 end
 
@@ -60,7 +63,6 @@ describe CategoriesController, '#show' do
   end
 
   it 'should render :show by default' do
-    pending "Stubbing #template_exists is not enough to fool Rails"
     controller.stub!(:template_exists?) \
       .and_return(true)
     do_get
@@ -75,7 +77,6 @@ describe CategoriesController, '#show' do
   end
   
   it 'should render personal when template exists' do
-    pending "Stubbing #template_exists is not enough to fool Rails"
     controller.stub!(:template_exists?) \
       .and_return(true)
     do_get
