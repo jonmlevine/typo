@@ -2,6 +2,7 @@
 #
 # This file is used by web_steps.rb, which you should also delete
 #
+#
 # You have been warned
 module NavigationHelpers
   # Maps a name to a path. Used by the
@@ -23,6 +24,14 @@ module NavigationHelpers
       '/admin/categories/new'
     when /^the edit categories page$/
       '/admin/categories/edit'
+    when /^the manage articles page$/
+      '/admin/content'
+    when /^an edit article page$/ 
+      begin
+        # find an arbitrary article and construct a URL for it
+        article_id = Article.first.id
+        "/admin/content/edit/#{article_id}"
+      end
 
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:
