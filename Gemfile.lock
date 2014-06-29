@@ -199,6 +199,7 @@ DEPENDENCIES
   rake (~> 0.9.2)
   recaptcha
   require_relative
+  rspec-expectations
   rspec-rails (~> 2.0)
   ruby-debug19
   rubypants (~> 0.2.0)

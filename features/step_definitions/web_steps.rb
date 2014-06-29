@@ -278,10 +278,11 @@ Then /^show me the page$/ do
 end
 
 Given /^There is at least one blog entry$/ do
-   Article.count >= 1
+   Article.count.should be >= 1
 end
 
 Given /^there are at least two blog entries$/ do
-   Article.count >= 2
+   while Article.count < 2 do
+   end
 end
 
