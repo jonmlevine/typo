@@ -29,8 +29,7 @@ module NavigationHelpers
     when /^an edit article page$/ 
       begin
         # find an arbitrary article and construct a URL for it
-        article_id = Article.first.id
-        "/admin/content/edit/#{article_id}"
+        "/admin/content/edit/#{Article.first.id}"
       end
 
     # Add more mappings here.

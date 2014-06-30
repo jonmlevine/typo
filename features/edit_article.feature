@@ -6,7 +6,7 @@ Feature: Edit Article
   Background:
     Given the blog is set up
     And I am logged into the admin panel
-    And There is at least one blog entry
+    And there is at least one blog entry
 
   Scenario: Start to edit an article
     Given I am on the manage articles page

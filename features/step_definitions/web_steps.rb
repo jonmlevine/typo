@@ -277,12 +277,16 @@ Then /^show me the page$/ do
   save_and_open_page
 end
 
-Given /^There is at least one blog entry$/ do
-   Article.count.should be >= 1
+Given /^there is at least one blog entry$/ do
+   while Article.count < 1 do
+     Article.create(:allow_comments => true, :allow_pings => true, :author => "Mr Typo #{Article.count}", :body => "Here is an article, number #{Article.count}!", :post_type => "read", :published => true, :settings => {"password"=>""}, :state => "published", :text_filter_id => 5, :title => "Test #{Article.count}", :type => "Article", :user_id => 1)
+   end
+
 end
 
 Given /^there are at least two blog entries$/ do
    while Article.count < 2 do
+     Article.create(:allow_comments => true, :allow_pings => true, :author => "Mr Typo #{Article.count}", :body => "Here is an article, number #{Article.count}!", :post_type => "read", :published => true, :settings => {"password"=>""}, :state => "published", :text_filter_id => 5, :title => "Test #{Article.count}", :type => "Article", :user_id => 1)
    end
 end
 
