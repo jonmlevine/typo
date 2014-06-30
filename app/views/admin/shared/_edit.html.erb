@@ -5,15 +5,4 @@
 
 <% end %>
 
-<%= form_tag(form_action, :id => "merge", :class => className) do %>
 
-  <h3><%= _("Merge Articles") %></h3>
-
-  <div class='merge'>
-    <label for="merge_article"><%= _("Article ID")%></label>
-    <div class='input'>
-      <%= text_field 'merge', 'with' %>
-    </div>
-    <%= submit_tag(_("Merge"), {:class => 'btn'}) %>
-  </div>
-<% end %>  

@@ -10,6 +10,7 @@ Feature: Merge Articles
 
   Scenario: Successfully merge articles
     Given I am on an edit article page
+    Then I should see "Merge Articles"
     When I fill in "merge_with" with "2"
     And I press "Publish"
     Then I should be on the admin content page

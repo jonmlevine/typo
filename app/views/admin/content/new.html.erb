@@ -1,3 +1,7 @@
 <% if params[:action] == "new" then @page_heading = _('New article') else @page_heading = _('Edit article') end %>
 
 <%= render "admin/shared/edit", { :form_type => "article", :form_action => { :action => "new", :id => @article.id , :class => ('autosave')} } %>
+
+<% if params[:action] == "edit" then %>
+  <%= render "merge", { :form_type => "merge_articles", :form_action => { :action => "new", :id => @article.id, :merge_article_id => @merge} } %>
+<% end %>
