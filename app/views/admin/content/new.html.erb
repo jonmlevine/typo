@@ -3,5 +3,5 @@
 <%= render "admin/shared/edit", { :form_type => "article", :form_action => { :action => "new", :id => @article.id , :class => ('autosave')} } %>
 
 <% if params[:action] == "edit" then %>
-  <%= render "merge", { :form_type => "merge_articles", :form_action => { :action => "new", :id => @article.id, :merge_article_id => @merge} } %>
+  <%= render "merge", { :form_type => "merge_articles", :form_action => { :action => "merge", :id => @article.id, :merge_article_id => @merge} } %>
 <% end %>

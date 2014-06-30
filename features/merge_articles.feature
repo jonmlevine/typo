@@ -12,9 +12,10 @@ Feature: Merge Articles
     Given I am on an edit article page
     Then I should see "Merge Articles"
     When I fill in "merge_with" with "2"
-    And I press "Publish"
+    And I press "Merge"
     Then I should be on the admin content page
     When I go to the home page
-    Then I should see "Foobar"
-    When I follow "Foobar"
-    Then I should see "Lorem Ipsum"
+    Then I should see "Hello World"
+    And I should not see "Test 2"
+    When I follow "Hello World"
+    Then I should see "Here is an article"

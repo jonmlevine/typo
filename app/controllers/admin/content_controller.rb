@@ -37,6 +37,10 @@ class Admin::ContentController < Admin::BaseController
     new_or_edit
   end
 
+  def merge
+    puts "Hi Mom"
+  end
+
   def destroy
     @record = Article.find(params[:id])
 
