@@ -38,6 +38,20 @@ class Admin::ContentController < Admin::BaseController
   end
 
   def merge
+    @article_sink = Article.find_by_id(params[:id])
+    @article_source = Article.find_by_id(params[:merge][:with])
+    if (@article_sink == nil) || (@article_source == nil) || (@article_sink.id == @article_source.id)
+      redirect_to :action => 'index'
+      if @article_sink == nil || @article_source == nil
+        flash[:error] = _("Error, one or the other article doesn't exist") 
+      elsif @article_sink.id == @article_source.id
+        flash[:error] = _("Error, can't merge article with itself")
+      else
+        flash[:error] = _("Error, unknown error")
+      end
+      return
+    end
+    
     puts "Hi Mom"
   end
 

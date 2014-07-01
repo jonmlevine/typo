@@ -230,6 +230,7 @@ describe Admin::ContentController do
         :allow_pings => '1' }.merge(options)
     end
 
+
     it 'should create article with no comments' do
       post(:new, 'article' => base_article({:allow_comments => '0'}),
                  'categories' => [Factory(:category).id])
@@ -480,6 +481,65 @@ describe Admin::ContentController do
     it_should_behave_like 'new action'
     it_should_behave_like 'destroy action'
     it_should_behave_like 'autosave action'
+
+    describe 'merge action' do
+      before do
+        @user_2 = Factory(:user)
+        @user_2.save
+	@first_article = Factory(:article)
+	@second_article = Factory(:article)
+
+        post(:new,
+             :id => @first_article.id,
+             :article => {:id => @first_article.id, 
+			  :title => 'First Title',
+			  :body => 'This is the first body.',
+			  :extended => 'This is the second extension',
+			  :user => @user
+			 }
+		)
+	@first_article.add_comment({:body => 'First comment about first article', :author => 'bob', :email => 'bob@home', :url => 'http://bobs.home/'})
+	
+        post(:new,
+             :id => @second_article.id,
+             :article => {:id => @second_article.id, 
+			  :title => 'Second Title',
+			  :body => 'This is the Second body.',
+	                  :extended => 'This is the Second extension.',
+			  :user => @user_2
+			 }
+		)
+
+	@second_article.add_comment({:body => 'First comment about second article', :author => 'carol', :email => 'carol@home', :url => 'http://carol.home/'})
+	@second_article.add_comment({:body => 'Second comment about second article', :author => 'ted', :email => 'ted@home', :url => 'http://ted.home/'})
+      end
+
+      it 'should display an error if second article does not exist' do
+	get :merge, 'id' => @first_article.id, 'merge' => {'with' => '9999999999'}
+	request.flash[:error].should_not be_empty
+      end
+
+      it 'should display an error if first article does not exist' do
+	get :merge, 'id' => '99999999998', 'merge' => {'with' => @second_article.id}
+	request.flash[:error].should_not be_empty
+      end
+
+      it 'should display an error if both articles do not exist' do
+	get :merge, 'id' => '99999999998', 'merge' => {'with' => '9999999999'}
+	request.flash[:error].should_not be_empty
+      end
+
+      it 'should fail without admin privs' do
+      end
+
+      it 'should fail if both articles are the same' do
+	get :merge, 'id' => @first_article.id, 'merge' => {'with' => @first_article.id}	
+      end
+
+      it 'should merge the bodies, extended content, comments, tags and categories and pick one title and author' do
+      end
+
+    end
 
     describe 'edit action' do
 
