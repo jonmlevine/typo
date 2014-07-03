@@ -11,7 +11,7 @@ Feature: Merge Articles
   Scenario: Successfully merge articles
     Given I am on an edit article page
     Then I should see "Merge Articles"
-    When I fill in "merge_with" with "2"
+    When I fill in "merge_with" with "3"
     And I press "Merge"
     Then I should be on an edit article page
     And I should see "Successfully"
