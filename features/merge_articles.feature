@@ -13,9 +13,13 @@ Feature: Merge Articles
     Then I should see "Merge Articles"
     When I fill in "merge_with" with "2"
     And I press "Merge"
-    Then I should be on the admin content page
+    Then I should be on an edit article page
+    And I should see "Successfully"
     When I go to the home page
     Then I should see "Hello World"
     And I should not see "Test 2"
     When I follow "Hello World"
     Then I should see "Here is an article"
+    And I should see "Welcome to Typo"
+
+

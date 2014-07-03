@@ -38,26 +38,41 @@ class Admin::ContentController < Admin::BaseController
   end
 
   def merge
-    @article_sink = Article.find_by_id(params[:id])
-    @article_source = Article.find_by_id(params[:merge][:with])
-    if (@article_sink == nil) || (@article_source == nil) || (@article_sink.id == @article_source.id)
-      if @article_sink == nil
+    puts "from content_controller.merge"
+    puts "from content_controller.merge current user is #{current_user.inspect}"
+    article_sink = Article.find_by_id(params[:id])
+    article_source = Article.find_by_id(params[:merge][:with])
+    puts article_sink.inspect
+    puts article_source.inspect
+    if (article_sink == nil) || (article_source == nil) || (article_sink.id == article_source.id)
+      if article_sink == nil
         redirect_to :action => 'index'
       else
-        redirect_to :action => 'edit', :id => params[:id] 
+        redirect_to :action => 'edit', 'id' => params[:id] 
       end
 
-      if @article_sink == nil || @article_source == nil
+      if article_sink == nil || article_source == nil
         flash[:error] = _("Error, one or the other article doesn't exist") 
-      elsif @article_sink.id == @article_source.id
+      elsif article_sink.id == article_source.id
         flash[:error] = _("Error, can't merge article with itself")
       else
         flash[:error] = _("Error, unknown error")
       end
       return
     end
-    
-    puts "Hi Mom"
+ 
+    if article_sink.merge(article_source)
+      puts "From content_controller.merge article_sink is now #{article_sink.inspect}"
+      flash[:notice] = _("Successfully merged article #{article_sink.id} with article #{article_source.id}")
+    else
+      flash[:error] = _("Error saving article #{article_sink.id}")
+    end
+
+    puts "from Content_controller.merge article in db is now "
+    puts Article.find_by_id(params[:id]).inspect
+
+    article_source.destroy
+    redirect_to :action => 'edit', :id => article_sink.id
   end
 
   def destroy

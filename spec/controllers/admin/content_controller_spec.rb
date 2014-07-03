@@ -483,35 +483,45 @@ describe Admin::ContentController do
     it_should_behave_like 'autosave action'
 
     describe 'merge action' do
-      before do
+      before(:each) do
         @user_2 = Factory(:user)
         @user_2.save
-	@first_article = Factory(:article)
-	@second_article = Factory(:article)
+	@first_article = Factory(:article, :title => 'First Title', 
+					   :body => 'This is the first body.',
+					   :extended => 'This is the second extension',
+					   :user => @user)
+	@second_article = Factory(:article, :title => 'Second Title',
+                                            :body => 'This is the Second body.',
+					    :extended => 'This is the Second extension.',
+					    :user => @user_2)
 
-        post(:new,
+       post(:new,
              :id => @first_article.id,
              :article => {:id => @first_article.id, 
-			  :title => 'First Title',
-			  :body => 'This is the first body.',
-			  :extended => 'This is the second extension',
-			  :user => @user
-			 }
-		)
-	@first_article.add_comment({:body => 'First comment about first article', :author => 'bob', :email => 'bob@home', :url => 'http://bobs.home/'})
-	
+                         :title => @first_article.title,
+                         :body => @first_article.body,
+                         :extended => @first_article.extended,
+                         :user => @first_article.user
+                        }
+               )
+ 	@first_article.add_comment({:body => 'First comment about first article', :author => 'bob', :email => 'bob@home', :url => 'http://bobs.home/'})
+	@first_article.save
+
         post(:new,
              :id => @second_article.id,
              :article => {:id => @second_article.id, 
-			  :title => 'Second Title',
-			  :body => 'This is the Second body.',
-	                  :extended => 'This is the Second extension.',
-			  :user => @user_2
-			 }
-		)
+                         :title => @second_article.title,
+                         :body => @second_article.body,
+                         :extended => @second_article.extended,
+                         :user => @second_article.user
+                        }
+               )
+
 
 	@second_article.add_comment({:body => 'First comment about second article', :author => 'carol', :email => 'carol@home', :url => 'http://carol.home/'})
 	@second_article.add_comment({:body => 'Second comment about second article', :author => 'ted', :email => 'ted@home', :url => 'http://ted.home/'})
+	@second_article.save
+
       end
 
       it 'should display an error if second article does not exist' do
@@ -537,15 +547,32 @@ describe Admin::ContentController do
 
       it 'should display an error if both articles are the same' do
 	get :merge, 'id' => @first_article.id, 'merge' => {'with' => @first_article.id}	
+        request.flash[:error].should_not be_empty
         response.should redirect_to :action => 'edit', :id => @first_article.id
       end
 
-      it 'should merge the bodies, extended content, comments, tags and categories and pick one title and author' do
+      it 'should merge the bodies and comments and pick one title and author' do
+	puts "From content_controller_spec"
         newtitle    = @first_article.title
         newauthor   = @first_article.user
 	newbody     = @first_article.body + @second_article.body
-        newextended = @first_article.
-	puts newtitle, newauthor, newbody
+        get :merge, 'id' => @first_article.id, 'merge' => {'with' => @second_article.id}
+        request.flash[:notice].should_not be_empty
+	assert request.flash[:error] == nil
+        response.should redirect_to :action => 'edit', 'id' => @first_article.id
+        puts "from content_controller_spec: #{request.flash[:notice]}"
+	puts "From content_controller_spec: #{newtitle}, #{newauthor}, #{newbody}"
+        puts newtitle
+        puts newauthor
+        puts newbody
+	after_article = Article.find(@first_article.id)
+	puts "from content_controller_spec: after_article is #{after_article.inspect}"
+	@first_article.reload
+        @first_article.title.should be == newtitle
+        @first_article.user.should be == newauthor
+        @first_article.body.should be == newbody
+        puts @first_article.comments.inspect
+        @first_article.comments.count.should be == 3
       end
 
     end

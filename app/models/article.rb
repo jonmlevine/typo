@@ -417,18 +417,28 @@ class Article < Content
   end
 
   def merge(source_article)
-    self.body << source_article.body
-    self.extended << source_article.extended
-    source_article.tags.each do | tag | 
-      self.tags << tag if !self.tags.include?(tag)
-    end
+    puts "from article.merge"
+    puts source_article.inspect
+    puts self.inspect
+    if source_article != nil && source_article != self
+      self.body = String.new if self.body == nil
+      self.body += source_article.body 
+      puts "from article.merge: self.body is #{self.body}"
+#TODO: Merge extended
+#      self.extended << source_article.extended
+#TODO: Merge tags
+#      source_article.tags.each do | tag | 
+#        self.tags << tag 
+#      end
 #TODO: Merge categories
-#    source_article.categories.each do | category |
-#      self.categories << category if !self.categories.include?(category)
-#    end
-    source_article.comments.each do | comment |
-      self.comments << comment 
+#      source_article.categories.each do | category |
+#        self.categories << category if !self.categories.include?(category)
+#      end
+      source_article.comments.each do | comment |
+        self.add_comment({:body => comment.body, :author => comment.author, :email => comment.email, :url => comment.url})   
+      end
     end
+    self.save
   end
 
   protected
