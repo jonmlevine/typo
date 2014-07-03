@@ -416,6 +416,21 @@ class Article < Content
     user.admin? || user_id == user.id
   end
 
+  def merge(source_article)
+    self.body << source_article.body
+    self.extended << source_article.extended
+    source_article.tags.each do | tag | 
+      self.tags << tag if !self.tags.include?(tag)
+    end
+#TODO: Merge categories
+#    source_article.categories.each do | category |
+#      self.categories << category if !self.categories.include?(category)
+#    end
+    source_article.comments.each do | comment |
+      self.comments << comment 
+    end
+  end
+
   protected
 
   def set_published_at

@@ -517,26 +517,35 @@ describe Admin::ContentController do
       it 'should display an error if second article does not exist' do
 	get :merge, 'id' => @first_article.id, 'merge' => {'with' => '9999999999'}
 	request.flash[:error].should_not be_empty
+        response.should redirect_to :action => 'edit', :id => @first_article.id
       end
 
       it 'should display an error if first article does not exist' do
 	get :merge, 'id' => '99999999998', 'merge' => {'with' => @second_article.id}
 	request.flash[:error].should_not be_empty
+        response.should redirect_to :action => 'index'
       end
 
       it 'should display an error if both articles do not exist' do
 	get :merge, 'id' => '99999999998', 'merge' => {'with' => '9999999999'}
 	request.flash[:error].should_not be_empty
+        response.should redirect_to :action => 'index'
       end
 
       it 'should fail without admin privs' do
       end
 
-      it 'should fail if both articles are the same' do
+      it 'should display an error if both articles are the same' do
 	get :merge, 'id' => @first_article.id, 'merge' => {'with' => @first_article.id}	
+        response.should redirect_to :action => 'edit', :id => @first_article.id
       end
 
       it 'should merge the bodies, extended content, comments, tags and categories and pick one title and author' do
+        newtitle    = @first_article.title
+        newauthor   = @first_article.user
+	newbody     = @first_article.body + @second_article.body
+        newextended = @first_article.
+	puts newtitle, newauthor, newbody
       end
 
     end

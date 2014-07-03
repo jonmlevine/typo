@@ -97,6 +97,72 @@ describe Article do
     assert_equal 1, b.categories.size
   end
 
+  it "test merge bodies, extended content, comments, tags, categories; pick one title and author" do
+    bob   = Factory(:user, :name => 'bob')
+    carol = Factory(:user, :name => 'carol')
+    ted	  = Factory(:user, :name => 'ted')
+
+    a = Article.new
+    a.user_id = bob.id
+    a.body = "First body"
+    a.extended = "First extended"
+    a.title = "First title"
+    a.keywords = "First Second"
+    assert a.save
+
+    b = Article.new
+    b.user_id = carol.id
+    b.body = "Second body"
+    b.extended = "Second extended"
+    b.title = "Second title"
+    b.keywords = "Second Third"
+    assert b.save
+
+    comment_1 = {:body => 'First comment about first article', :author => bob.name}
+    comment_2 = {:body => 'First comment about second article', :author => carol.name}
+    comment_3 = {:body => 'Second comment about second article', :author => ted.name}
+    a.add_comment(comment_1)
+    b.add_comment(comment_2)
+    b.add_comment(comment_3)
+    a_comments = a.comments
+    b_comments = b.comments
+
+    category_1 = Category.create(:name => "First", :permalink => "firstcategorylink")
+    category_2 = Category.create(:name => "Second", :permalink => "secondcategorylink")
+    category_3 = Category.create(:name => "Third", :permalink => "thirdcategorylink")
+
+    a.add_category(category_1, true)
+    a.add_category(category_2)
+    b.add_category(category_2, true)
+    b.add_category(category_3)
+    assert a.save
+    assert b.save
+    comment_guids = Array.new
+    a.comments.each do |comment| 
+      comment_guids << comment.guid 
+    end
+    b.comments.each do |comment| 
+      comment_guids << comment.guid 
+    end
+
+    a.merge(b)
+    puts a.comments.inspect
+
+    a.user_id.should 		be == bob.id
+    a.body.should 		be == "First bodySecond body"
+    a.extended.should		be == "First extendedSecond extended"
+    a.title.should     		be == "First title"
+    a.tags.should       	include(Tag.get("First"), Tag.get("Second"), Tag.get("Third"))
+    a.tags.count.should 	be == 3
+# TODO: Merge categories
+#    a.categories.should 	include(category_1, category_2, category_3)
+#    a.categories.count.should 	be == 3
+    a.comments.count.should	be == 3
+    a.comments.each do |comment|
+      comment_guids.should      include(comment.guid)
+    end
+  end
+
   it "test_permalink_with_title" do
     article = Factory(:article, :permalink => 'article-3', :published_at => Time.utc(2004, 6, 1))
     assert_equal(article,

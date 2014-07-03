@@ -41,7 +41,12 @@ class Admin::ContentController < Admin::BaseController
     @article_sink = Article.find_by_id(params[:id])
     @article_source = Article.find_by_id(params[:merge][:with])
     if (@article_sink == nil) || (@article_source == nil) || (@article_sink.id == @article_source.id)
-      redirect_to :action => 'index'
+      if @article_sink == nil
+        redirect_to :action => 'index'
+      else
+        redirect_to :action => 'edit', :id => params[:id] 
+      end
+
       if @article_sink == nil || @article_source == nil
         flash[:error] = _("Error, one or the other article doesn't exist") 
       elsif @article_sink.id == @article_source.id
