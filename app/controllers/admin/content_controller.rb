@@ -41,7 +41,7 @@ class Admin::ContentController < Admin::BaseController
     puts "from content_controller.merge"
     puts "from content_controller.merge current user is #{current_user.inspect}"
     article_sink = Article.find_by_id(params[:id])
-    article_source = Article.find_by_id(params[:merge][:with])
+    article_source = Article.find_by_id(params[:merge_with])
     puts article_sink.inspect
     puts article_source.inspect
     if (article_sink == nil) || (article_source == nil) || (article_sink.id == article_source.id)
