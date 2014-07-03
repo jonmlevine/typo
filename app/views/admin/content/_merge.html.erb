@@ -3,8 +3,8 @@
 
   <div class='merge'>
     <label for="merge_article"><%= _("Article ID")%></label>
-    <div class='input' name='merge_with'>
-      <%= text_field 'merge', 'with' %>
+    <div class='input'>
+      <%= text_field 'merge', 'with', name: "merge_with" %>
     </div>
     <%= submit_tag(_("Merge"), {:class => 'btn'}) %>
   </div>
