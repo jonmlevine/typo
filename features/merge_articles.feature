@@ -5,11 +5,11 @@ Feature: Merge Articles
 
   Background:
     Given the blog is set up
-    And I am logged into the admin panel
     And there are at least two blog entries
 
   Scenario: Successfully merge articles
-    Given I am on an edit article page
+    Given I am logged in as an admin
+    And I am on an edit article page
     Then I should see "Merge Articles"
     When I fill in "merge_with" with "3"
     And I press "Merge"
@@ -21,5 +21,11 @@ Feature: Merge Articles
     When I follow "Hello World"
     Then I should see "Here is an article"
     And I should see "Welcome to Typo"
+
+  Scenario: Don't show merge to non-admins
+    Given I am logged in as a publisher
+    And I am on an edit article page
+    Then I should not see "Merge Articles"
+
 
 

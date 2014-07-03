@@ -5,7 +5,7 @@ Feature: Edit Article
 
   Background:
     Given the blog is set up
-    And I am logged into the admin panel
+    And I am logged in as an admin
     And there is at least one blog entry
 
   Scenario: Start to edit an article
